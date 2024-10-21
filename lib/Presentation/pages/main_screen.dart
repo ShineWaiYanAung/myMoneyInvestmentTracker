@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/main_screen_control.dart';
 
 class MainScreenPage extends StatefulWidget {
   const MainScreenPage({super.key});
@@ -30,8 +31,13 @@ class _MainScreenPageState extends State<MainScreenPage> {
         moneyPosition = MediaQuery.of(context).size.width * 0.65;
       });
     });
+    // Navigate after the animations are done
+    Future.delayed(Duration(milliseconds: 2500), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MainScreenControl()),
+      );
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
