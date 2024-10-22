@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_investment_track/Presentation/pages/subpages/main_screen_control.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/stack_widget.dart';
 
 class MainScreenPage extends StatefulWidget {
   const MainScreenPage({super.key});
@@ -34,7 +34,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
     // Navigate after the animations are done
     Future.delayed(Duration(milliseconds: 2500), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MainScreenControl()),
+        MaterialPageRoute(builder: (context) => StackWidget()),
       );
     });
   }
