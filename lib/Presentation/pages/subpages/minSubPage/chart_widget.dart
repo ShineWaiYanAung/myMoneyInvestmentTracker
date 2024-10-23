@@ -43,17 +43,24 @@ class InvestmentDataChart extends StatelessWidget {
               children: [
                 Text(
                   "Total Invest",
-                  style: TextStyle(color: Colors.white, fontSize: 30),
+                  style: TextStyle(
+                      fontFamily: 'Jersey',
+                      color: Colors.white, fontSize: 50),
                 ),
                 SizedBox(height: 40),
                 Text(
                   "\$5234324",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style: TextStyle(
+                      fontFamily: 'JainiPurva',
+                      color: Colors.white, fontSize: 24),
                 ),
                 SizedBox(height: 20),
                 Text(
                   "Dollar",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+
+                  style: TextStyle(
+                      fontFamily: 'Jersey',
+                      color: Colors.white, fontSize: 24),
                 ),
               ],
             ),

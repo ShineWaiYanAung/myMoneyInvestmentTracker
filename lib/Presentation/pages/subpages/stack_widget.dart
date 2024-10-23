@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/drawer_app.dart';
 
 import 'main_screen_control.dart';
 
@@ -33,8 +34,11 @@ class _StackWidget extends State<StackWidget> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    final GlobalKey<ScaffoldState> _scaffordKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
+      key: _scaffordKey,
+        drawer: CustomDrawer(),
         body: Stack(
       children: [
         Stack(
@@ -65,9 +69,14 @@ class _StackWidget extends State<StackWidget> {
           ],
         ),
         ///Top App Bar
-        MainScreenControl(menuOpacity: menuOpacity, width: width, height: height),
+        MainScreenControl(menuOpacity: menuOpacity, width: width, height: height, scaffoldKey: _scaffordKey,),
       ],
     ));
+  }
+  @override
+  void dispose() {
+  
+    super.dispose();
   }
 }
 

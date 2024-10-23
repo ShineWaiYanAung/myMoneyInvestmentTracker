@@ -11,11 +11,13 @@ class MainScreenControl extends StatefulWidget {
     required this.menuOpacity,
     required this.width,
     required this.height,
+    required this.scaffoldKey,
   });
 
   final double menuOpacity;
   final double width;
   final double height;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<MainScreenControl> createState() => _MainScreenControl();
@@ -24,6 +26,7 @@ class MainScreenControl extends StatefulWidget {
 class _MainScreenControl extends State<MainScreenControl>
     with SingleTickerProviderStateMixin {
   int selectedTabIndex = 0;
+
 
   late AnimationController _controller;
   late Animation<Alignment> _tlAlignAnim;
@@ -82,9 +85,13 @@ class _MainScreenControl extends State<MainScreenControl>
       selectedTabIndex = index;
     });
   }
+  void onPressDrawer(){
+    Scaffold.of(context).openDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     List <Widget> pages = [
       InvestmentDataChart(controller: _controller, tlAlignAnim: _tlAlignAnim, brAlignAnim: _brAlignAnim),
       InvestmentTitle()
@@ -117,7 +124,9 @@ class _MainScreenControl extends State<MainScreenControl>
                         ],
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          onPressDrawer();
+                        },
                         icon: Icon(
                           Icons.menu,
                           size: 50,

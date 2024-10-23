@@ -26,7 +26,7 @@ class _TabBarItemState extends State<TabBarItem>
     super.initState();
     // Increase duration to 16 seconds for a slower animation
     _controller =
-        AnimationController(duration: Duration(seconds: 8), vsync: this);
+        AnimationController(duration: Duration(seconds: 2), vsync: this);
 
     _tlAlignAnim = TweenSequence<Alignment>([
       TweenSequenceItem<Alignment>(
@@ -101,7 +101,9 @@ class _TabBarItemState extends State<TabBarItem>
                   onPressed: widget.onPressed,
                   child: Text(
                     widget.label,
-                    style: TextStyle(color: Colors.white, fontSize: 35),
+                    style: TextStyle(
+                        fontFamily: 'Jersey',
+                        color: Colors.white, fontSize: 35),
                     textAlign: TextAlign.center, // Center text in the Container
                   ),
                 )),
@@ -109,5 +111,10 @@ class _TabBarItemState extends State<TabBarItem>
         },
       ),
     );
+  }
+  @override
+  void dispose() {
+    _controller.dispose(); // Clean up the controller
+    super.dispose();
   }
 }

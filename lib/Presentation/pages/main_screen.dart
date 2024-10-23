@@ -101,7 +101,8 @@ class _MainScreenPageState extends State<MainScreenPage> {
             child: Text(
               "Welcome",
               style: TextStyle(
-                fontSize: 60,
+                fontFamily: 'Jersey',
+                fontSize: 80,
                 color: Colors.white,
               ),
             ),
@@ -122,7 +123,8 @@ class _MainScreenPageState extends State<MainScreenPage> {
             child: Text(
               "Shine Wai Yan Aung",
               style: TextStyle(
-                fontSize: 30,
+                fontFamily: 'Jersey',
+                fontSize: 40,
                 color: Colors.white,
               ),
             ),
