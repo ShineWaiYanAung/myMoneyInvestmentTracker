@@ -20,7 +20,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
   void initState() {
     super.initState();
     // Trigger animation after the widget is built
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 1000), () {
       setState(() {
         topPosition = 0; // Move to the top of the screen
         coinTopPosition  =15;
@@ -32,7 +32,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
       });
     });
     // Navigate after the animations are done
-    Future.delayed(Duration(milliseconds: 2500), () {
+    Future.delayed(Duration(milliseconds: 3000), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => StackWidget()),
       );
@@ -65,7 +65,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
                 left: 0,
                 child: SizedBox(
                   child: Image.asset(
-                    "asset/screenAnimate/bottomReactangle.png",
+                    "asset/screenAnimate/bottomRectangle.png",
                     fit: BoxFit.fill,
                   ),
                 ),

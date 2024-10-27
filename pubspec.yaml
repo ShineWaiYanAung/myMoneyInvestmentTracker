@@ -65,7 +65,7 @@ flutter:
     - asset/coin.png
     - asset/human_avator.png
     - asset/money_bag.png
-    - asset/screenAnimate/bottomReactangle.png
+    - asset/screenAnimate/bottomRectangle.png
     - asset/screenAnimate/topRectangle.png
     - asset/person/maleStudent.png
 
