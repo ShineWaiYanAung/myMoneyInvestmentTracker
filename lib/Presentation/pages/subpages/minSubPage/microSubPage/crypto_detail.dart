@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
 
 import '../../../../widgets/back_button.dart';
 
@@ -73,7 +74,9 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              buildCurrencyButton(onPressed: () {  }, path: "asset/investingCurrencyPic/ton.png"),
+              buildCurrencyButton(onPressed: () {
+                Navigator.of(context).push( MaterialPageRoute(builder: (context) => CurrencyDetailData(),),);
+              }, path: "asset/investingCurrencyPic/ton.png"),
               buildCurrencyButton(onPressed: () {  }, path: "asset/investingCurrencyPic/star.png"),
             ],
           )

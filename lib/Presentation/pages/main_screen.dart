@@ -124,7 +124,7 @@ class _MainScreenPageState extends State<MainScreenPage> {
               "Shine Wai Yan Aung",
               style: TextStyle(
                 fontFamily: 'Jersey',
-                fontSize: 40,
+                fontSize: width * 0.2,
                 color: Colors.white,
               ),
             ),

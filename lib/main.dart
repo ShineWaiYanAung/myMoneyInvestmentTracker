@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
 
 import 'Presentation/pages/main_screen.dart';
 
