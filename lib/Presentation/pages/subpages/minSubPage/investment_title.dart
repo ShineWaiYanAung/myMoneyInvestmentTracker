@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'microSubPage/crypto_detail.dart';
+
 class InvestmentTitle extends StatefulWidget {
   const InvestmentTitle({super.key});
 
@@ -23,12 +25,17 @@ class _InvestmentTitleState extends State<InvestmentTitle> {
                   elevation: 6,
                   color: Color(0xff1C2242),
                   child: ListTile(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CryptoTypeDetail(
+                        cryptoName: 'Bits',
+                      ),
+                    )),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                     leading: CircleAvatar(
                       backgroundColor:
                           Theme.of(context).scaffoldBackgroundColor,
-                      child: Text(
+                      child: const Text(
                         "1",
                         style: TextStyle(color: Colors.white),
                       ),

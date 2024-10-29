@@ -68,6 +68,10 @@ flutter:
     - asset/screenAnimate/bottomRectangle.png
     - asset/screenAnimate/topRectangle.png
     - asset/person/maleStudent.png
+    - asset/backButton/backButtonCurrency.png
+    - asset/backButton/backButtonType.png
+    - asset/investingCurrencyPic/star.png
+    - asset/investingCurrencyPic/ton.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
