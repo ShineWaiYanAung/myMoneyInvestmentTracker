@@ -86,7 +86,10 @@ class _MainScreenControl extends State<MainScreenControl>
     });
   }
   void onPressDrawer(){
-    Scaffold.of(context).openDrawer();
+    final scaffold = Scaffold.of(context);
+    if (scaffold.isDrawerOpen) return; // Avoid opening if already open
+    scaffold.openDrawer();
+
   }
 
   @override
@@ -138,10 +141,30 @@ class _MainScreenControl extends State<MainScreenControl>
                   AnimatedOpacity(
                     opacity: widget.menuOpacity,
                     duration: Duration(milliseconds: 2000),
-                    child: CircleAvatar(
-                      radius: widget.width * 0.1,
-                      backgroundImage:
-                          AssetImage("asset/person/maleStudent.png"),
+                    child: Container(
+                      width: widget.width * 0.2,
+                      height: widget.height * 0.1,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).focusColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.6),
+                            blurRadius: 3,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                         ///SearchEngine
+                        },
+                        icon: Icon(
+                          Icons.search,
+                          size: 50,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
                     ),
                   ),
                 ],

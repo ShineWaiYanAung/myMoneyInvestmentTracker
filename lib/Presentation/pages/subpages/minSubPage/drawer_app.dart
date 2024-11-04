@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -10,13 +13,14 @@ class _CustomDrawerState extends State<CustomDrawer>
   late AnimationController _controller;
   late Animation<Alignment> _tlAlignAnim;
   late Animation<Alignment> _brAlignAnim;
+  File? _selectedImage;
 
   @override
   void initState() {
     super.initState();
     // Increase duration to 16 seconds for a slower animation
-    _controller =
-        AnimationController(duration: Duration(microseconds: 1000), vsync: this);
+    _controller = AnimationController(
+        duration: Duration(microseconds: 1000), vsync: this);
 
     _tlAlignAnim = TweenSequence<Alignment>([
       TweenSequenceItem<Alignment>(
@@ -60,9 +64,15 @@ class _CustomDrawerState extends State<CustomDrawer>
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  final TextEditingController _cryptoNameController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
     final height = MediaQuery.of(context).size.height;
     return Drawer(
       child: Column(
@@ -74,7 +84,7 @@ class _CustomDrawerState extends State<CustomDrawer>
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Theme.of(context).focusColor,
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),
               ),
@@ -84,7 +94,12 @@ class _CustomDrawerState extends State<CustomDrawer>
                 CircleAvatar(
                   radius: height * 0.07,
                   backgroundColor: Colors.white,
-                  child: Image.asset("asset/person/maleStudent.png"),
+                  child: _selectedImage != null
+                      ? Image.file(
+                          _selectedImage!,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset("asset/person/maleStudent.png"),
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -126,7 +141,7 @@ class _CustomDrawerState extends State<CustomDrawer>
               onTap: () {},
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           // Card for Grading
           Card(
@@ -166,7 +181,9 @@ class _CustomDrawerState extends State<CustomDrawer>
                     color: Theme.of(context).focusColor,
                     shape: BoxShape.circle),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showDataInserterDialog();
+                  },
                   icon: Icon(
                     size: height * 0.06,
                     Icons.add,
@@ -181,4 +198,157 @@ class _CustomDrawerState extends State<CustomDrawer>
       ),
     );
   }
+
+  void showDataInserterDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: EdgeInsets.all(30),
+        backgroundColor: Theme.of(context).focusColor,
+        title: Center(
+          child: Text(
+            "Enter Your Crypto",
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+                fontFamily: "Jersey"),
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Divider(
+              thickness: 1,
+              color: Colors.grey.withOpacity(0.5),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextField(
+              controller: _cryptoNameController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  // Adjust the radius as needed
+                  borderSide: const BorderSide(
+                    color: Colors.white, // Set the border color to white
+                    width: 1.0, // Set the border width as needed
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  // Adjust for focused state
+                  borderSide: const BorderSide(
+                    color: Colors.white, // White border when focused
+                    width: 2.0, // Optional: increase width when focused
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  // Adjust for enabled state
+                  borderSide: const BorderSide(
+                    color: Colors.white, // White border when enabled
+                    width: 1.0, // Normal width
+                  ),
+                ),
+                hintText: 'Crypto Name',
+                // Add a hint if needed
+                hintStyle: TextStyle(
+                    color: Colors.white54), // Optional: hint text style
+              ),
+              style: TextStyle(color: Colors.white),
+              // Text color inside the TextField
+              cursorColor: Colors.white, // Cursor color
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              onTap: () {
+                _pickImageFromGallery();
+              },
+              child: Container(
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white),
+                child: Text(
+                  "Add Image",
+                  style: TextStyle(
+                      color: Theme.of(context).focusColor,
+                      fontSize: 16,
+                      fontFamily: "Jersey"),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              thickness: 1,
+              color: Colors.grey.withOpacity(0.5),
+            ),
+          ],
+        ),
+        actions: [
+          InkWell(
+            onTap: () {},
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20), color: Colors.white),
+              child: Text(
+                "Submit",
+                style: TextStyle(
+                    color: Theme.of(context).focusColor,
+                    fontSize: 16,
+                    fontFamily: "Jersey"),
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20), color: Colors.white),
+              child: Text(
+                "Close",
+                style: TextStyle(
+                    color: Theme.of(context).focusColor,
+                    fontSize: 16,
+                    fontFamily: "Jersey"),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+  bool _isPickingImage = false; // Add this variable to track image picking state
+
+  Future _pickImageFromGallery() async {
+    if (_isPickingImage) return; // Prevent multiple invocations
+
+    _isPickingImage = true; // Set the state to indicate picking is in progress
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+      await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      // Handle any errors (optional)
+      print("Error picking image: $e");
+    } finally {
+      _isPickingImage = false; // Reset the state after completion
+    }
+  }
+
 }
