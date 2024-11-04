@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:money_investment_track/BLOC/funcation_controller.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
@@ -6,7 +8,8 @@ import '../../../../widgets/back_button.dart';
 
 class CryptoTypeDetail extends StatefulWidget {
   final String cryptoName;
-  const CryptoTypeDetail({super.key, required this.cryptoName});
+  final File image;
+  const CryptoTypeDetail({super.key, required this.cryptoName,required this.image});
 
   @override
   State<CryptoTypeDetail> createState() => _CryptoTypeDetailState();
@@ -66,8 +69,14 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                           Container(
                             width: 120,
                             height: 120,
-                            color: Colors.blueAccent,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: FileImage(widget.image), // Use FileImage instead of Image.file
+                                fit: BoxFit.cover, // Adjust the image fit as needed
+                              ),
+                            ),
                           ),
+
                           Column(
                             children: [
                               buildCurrencyData(true, "TON"),
@@ -98,7 +107,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CurrencyDetailData(),
+                          builder: (context) => CurrencyDetailData(currencyName: 'TON',path:"asset/investingCurrencyPic/ton.png" ,),
                         ),
                       );
                     },
@@ -107,7 +116,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CurrencyDetailData(),
+                          builder: (context) => CurrencyDetailData(currencyName: 'Star',path: "asset/investingCurrencyPic/star.png",),
                         ),
                       );
                     },

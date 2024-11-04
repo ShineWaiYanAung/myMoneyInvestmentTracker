@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:money_investment_track/DataBase/HiveDataBase/Domain/CryptoEntity/cryptoModel.dart';
+import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
+import 'package:money_investment_track/main.dart';
+import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -74,6 +78,7 @@ class _CustomDrawerState extends State<CustomDrawer>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Drawer(
       child: Column(
         children: [
@@ -94,12 +99,7 @@ class _CustomDrawerState extends State<CustomDrawer>
                 CircleAvatar(
                   radius: height * 0.07,
                   backgroundColor: Colors.white,
-                  child: _selectedImage != null
-                      ? Image.file(
-                          _selectedImage!,
-                          fit: BoxFit.fill,
-                        )
-                      : Image.asset("asset/person/maleStudent.png"),
+                  child: Image.asset("asset/person/maleStudent.png"),
                 ),
                 SizedBox(height: 20),
                 Text(
@@ -182,7 +182,7 @@ class _CustomDrawerState extends State<CustomDrawer>
                     shape: BoxShape.circle),
                 child: IconButton(
                   onPressed: () {
-                    showDataInserterDialog();
+                    showDataInserterDialog(context);
                   },
                   icon: Icon(
                     size: height * 0.06,
@@ -199,7 +199,7 @@ class _CustomDrawerState extends State<CustomDrawer>
     );
   }
 
-  void showDataInserterDialog() {
+  void showDataInserterDialog(context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -292,7 +292,22 @@ class _CustomDrawerState extends State<CustomDrawer>
         ),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              final ProviderData _myProviderKey = context.read<ProviderData>();
+             if(_selectedImage == null || _cryptoNameController.text.isEmpty) {
+              _myProviderKey.showSnackBar(context, "You Missed the One Data to Put", false);
+               return;
+             };
+             final String cryptoName = _cryptoNameController.text;
+             final File selectedImage =_selectedImage!;
+             final CryptoModel myDataFromDialog = CryptoModel(cryptoName: cryptoName, cryptoImage: selectedImage);
+
+              _myProviderKey.insertingData(myDataFromDialog);
+              _myProviderKey.showSnackBar(context, "Successfully Added the Data", true);
+              Future.delayed(Duration(seconds: 1));
+             _selectedImage = null;
+             _cryptoNameController.clear();
+            },
             child: Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -308,6 +323,8 @@ class _CustomDrawerState extends State<CustomDrawer>
           ),
           InkWell(
             onTap: () {
+              _selectedImage = null;
+              _cryptoNameController.clear();
               Navigator.of(context).pop();
             },
             child: Container(

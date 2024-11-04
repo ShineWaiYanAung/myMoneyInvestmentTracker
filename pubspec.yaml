@@ -19,6 +19,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   animated_segmented_tab_control: ^2.0.0
+  lottie:
 
   google_fonts: ^2.3.2
   pie_chart: ^5.4.0
@@ -46,6 +47,7 @@ flutter:
     - asset/investingCurrencyPic/star.png
     - asset/investingCurrencyPic/ton.png
     - asset/logo/lcslogo.png
+    - lottieJson/emptyShow.json
   fonts:
     - family: Jersey
       fonts:

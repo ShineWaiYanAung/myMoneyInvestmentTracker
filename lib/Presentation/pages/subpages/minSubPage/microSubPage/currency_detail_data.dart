@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:money_investment_track/Presentation/widgets/back_button.dart';
 
 class CurrencyDetailData extends StatefulWidget {
-  const CurrencyDetailData({super.key});
+  final String currencyName;
+  final String path;
+  const CurrencyDetailData({super.key, required this.currencyName, required this.path});
 
   @override
   State<CurrencyDetailData> createState() => _CurrencyDetailDataState();
@@ -15,18 +17,21 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        onPressed: (){},child: Icon(Icons.add,color: Colors.white,size: 30,),),
       body: SafeArea(
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: BackButtonWidget(isColorChange: true, currencyName: "TON"),
+              child: BackButtonWidget(isColorChange: true, currencyName: widget.currencyName),
             ),
             SizedBox(
               width: width * 0.5,
               height: height * 0.24,
               child: Image.asset(
-                "asset/investingCurrencyPic/ton.png",
+                widget.path,
                 fit: BoxFit.cover,
               ),
             ),

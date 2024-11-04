@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
-import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
 import 'package:provider/provider.dart';
 import 'Presentation/pages/main_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
   runApp(const MyApp());
 }
 
@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+    return ChangeNotifierProvider(
 
-      providers: [
-          Provider(create: (context) => ProviderData(),),
-      ],
+
+
+      create: (BuildContext context) { return ProviderData() ;},
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
