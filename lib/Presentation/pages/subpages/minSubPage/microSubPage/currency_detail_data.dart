@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/chart_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:money_investment_track/Presentation/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
@@ -11,16 +11,19 @@ class CurrencyDetailData extends StatefulWidget {
   final String currencyName;
   final String path;
   const CurrencyDetailData(
-      {super.key, required this.currencyName, required this.path, required this.cryptoName});
+      {super.key,
+      required this.currencyName,
+      required this.path,
+      required this.cryptoName});
 
   @override
   State<CurrencyDetailData> createState() => _CurrencyDetailDataState();
 }
 
 class _CurrencyDetailDataState extends State<CurrencyDetailData> {
-  final TextEditingController currencyName = TextEditingController();
   final TextEditingController currencyQuantity = TextEditingController();
-  final TextEditingController currencyPrice = TextEditingController();
+  final TextEditingController myanmarDollarRatePrice = TextEditingController();
+  final TextEditingController currencyRate = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -110,87 +113,126 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                       // Check if the cryptocurrency name matches
                       if (crypto.cryptoName == widget.cryptoName) {
                         // Check if there are any currency investments
-                        if (crypto.currencyInvestmentData != null && crypto.currencyInvestmentData!.isNotEmpty) {
+                        if (crypto.currencyInvestmentData != null &&
+                            crypto.currencyInvestmentData!.isNotEmpty) {
                           // Iterate through the list of investments
                           for (var currency in crypto.currencyInvestmentData!) {
                             // Check if the investment currency name matches
-                            if (currency.investmentCurrencyName == widget.currencyName) {
+                            if (currency.investmentCurrencyName ==
+                                widget.currencyName) {
                               // Add the matching investment to the list
-                              currencyModelList.add(currency); // Correctly add the individual investment
+                              currencyModelList.add(
+                                  currency); // Correctly add the individual investment
                             }
                           }
                         }
                       }
                     }
 
+                    return currencyModelList.isEmpty
+                        ? Center(
+                            child: Lottie.asset("lottieJson/emptyShow.json"),
+                          )
+                        : ListView.builder(
+                            itemCount: currencyModelList.length,
+                            itemBuilder: (context, index) {
+                              ///AssigningTheData
+                              final currencyEachData = currencyModelList[index];
+                              int number = index + 1;
+                              String formattedPrice = currencyEachData
+                                          .investmentTotalPrice >=
+                                      100000
+                                  ? "MMK ${(currencyEachData.investmentTotalPrice / 100000).toStringAsFixed(1)} Lakhs"
+                                  : "MMK ${currencyEachData.investmentTotalPrice.toStringAsFixed(2)}";
+                              String formattedDate =
+                                  DateFormat("M/d/yyyy 'at' h:mm a 'on' E")
+                                      .format(currencyEachData
+                                          .investmentCurrencyDatTime);
+                              ///////////////////////////////////////
 
-
-
-                    return
-                      currencyModelList.isEmpty ? Center(
-                        child: Lottie.asset("lottieJson/emptyShow.json"),
-                      ) :
-                      ListView.builder(
-                          itemCount: currencyModelList.length,
-                          itemBuilder: (context, index) {
-                      final currencyEachData = currencyModelList[index];
-                      int number = index +1;
-                      return
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 20),
-                        child: Card(
-                          shadowColor: Color(0xff1C2242),
-                          elevation: 6,
-                          color: Colors.white,
-                          child: ListTile(
-                            onTap: () {},
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            leading: CircleAvatar(
-                              backgroundColor: Theme.of(context).focusColor,
-                              child: Text(
-                                number.toString(),
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            title: Row(
-                              children: [
-                                Text(
-                                  currencyEachData.investmentCurrencyName,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).focusColor),
+                              return Padding(
+                                padding: EdgeInsets.only(bottom: 20),
+                                child: Card(
+                                  shadowColor: Color(0xff1C2242),
+                                  elevation: 6,
+                                  color: Colors.white,
+                                  child: ExpansionTile(
+                                    leading: CircleAvatar(
+                                      backgroundColor:
+                                          Theme.of(context).focusColor,
+                                      child: Text(
+                                        number.toString(),
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    title: Row(
+                                      children: [
+                                        Text(
+                                          currencyEachData
+                                              .investmentCurrencyName,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                                  Theme.of(context).focusColor),
+                                        ),
+                                        SizedBox(
+                                          width: 50,
+                                        ),
+                                        Text(
+                                          currencyEachData
+                                              .investmentCurrencyQuantity
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                                  Theme.of(context).focusColor),
+                                        )
+                                      ],
+                                    ),
+                                    subtitle: Text(
+                                      "$formattedPrice",
+                                      style: TextStyle(
+                                          color: Colors.black.withOpacity(0.7),
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: IconButton(
+                                      ///Need To Do
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(height: 10,),
+                                          Text(
+                                            "Myanmar Dollar Rate ${currencyEachData.myanmarDollarRate.toString()}  MMK",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Theme.of(context).focusColor),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                            formattedDate,
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.blueAccent),
+                                          ),
+                                          SizedBox(height: 10,)
+                                        ],
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Text(
-                                  currencyEachData.investmentCurrencyQuantity.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).focusColor),
-                                )
-                              ],
-                            ),
-                            subtitle: Text(
-                              "MMK ${currencyEachData.investmentCurrencyPrice}",
-                              style: TextStyle(
-                                  color: Colors.black.withOpacity(0.7),
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            trailing: IconButton(
-
-                              ///Need To Do
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                )),
-                          ),
-                        ),
-                      );
-                    });
+                              );
+                            });
                   },
                 ),
               ),
@@ -202,9 +244,9 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
   }
 
   void showDataInserterDialog(BuildContext context) {
-    String? currencyNameError;
-    String? currencyPriceError;
     String? currencyQuantityError;
+    String? currencyPriceRateError;
+    String? myanmarRateError;
 
     showDialog(
       context: context,
@@ -232,85 +274,10 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                     color: Colors.grey.withOpacity(0.5),
                   ),
                   SizedBox(height: 20),
+                  // Currency Quantity Field
                   TextField(
-                    keyboardType: TextInputType.text,
-                    controller: currencyName,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      hintText: 'Currency Name',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      errorText: currencyNameError,
-                    ),
-                    style: TextStyle(color: Colors.white),
-                    cursorColor: Colors.white,
-                    onChanged: (value) {
-                      setState(() {
-                        currencyNameError = null;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
-                    controller: currencyPrice,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 2.0,
-                        ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: const BorderSide(
-                          color: Colors.white,
-                          width: 1.0,
-                        ),
-                      ),
-                      hintText: 'Currency Price',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      errorText: currencyPriceError,
-                    ),
-                    style: TextStyle(color: Colors.white),
-                    cursorColor: Colors.white,
-                    onChanged: (value) {
-                      setState(() {
-                        currencyPriceError = null;
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  TextField(
+                    keyboardType: TextInputType.numberWithOptions(decimal: true), // Allow decimal numbers
                     controller: currencyQuantity,
-                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -345,6 +312,84 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                       });
                     },
                   ),
+                  SizedBox(height: 20),
+                  // Currency Rate Field
+                  TextField(
+                    controller: currencyRate,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                        ),
+                      ),
+                      hintText: 'Currency Rate',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      errorText: currencyPriceRateError,
+                    ),
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
+                    onChanged: (value) {
+                      setState(() {
+                        currencyPriceRateError = null;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  // Myanmar Dollar Rate Field
+                  TextField(
+                    controller: myanmarDollarRatePrice,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                        ),
+                      ),
+                      hintText: 'Myanmar Dollar Rate',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      errorText: myanmarRateError,
+                    ),
+                    style: TextStyle(color: Colors.white),
+                    cursorColor: Colors.white,
+                    onChanged: (value) {
+                      setState(() {
+                        myanmarRateError = null;
+                      });
+                    },
+                  ),
                   SizedBox(height: 10),
                   Divider(
                     thickness: 1,
@@ -356,47 +401,64 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                 InkWell(
                   onTap: () {
                     // Reset error messages
-                    currencyNameError = null;
-                    currencyPriceError = null;
+                    currencyPriceRateError = null;
+                    myanmarRateError = null;
                     currencyQuantityError = null;
 
-                    final String name = currencyName.text.trim();
-                    final String priceStr = currencyPrice.text.trim();
+                    final String name = widget.currencyName;
+                    final String myanmarRateStr = myanmarDollarRatePrice.text.trim();
+                    final String priceStr = currencyRate.text.trim();
                     final String quantityStr = currencyQuantity.text.trim();
 
                     // Validate all fields and set errors
-                    if (name.isEmpty) {
-                      currencyNameError = "Currency name cannot be empty.";
+                    if (myanmarRateStr.isEmpty || double.tryParse(myanmarRateStr) == null) {
+                      myanmarRateError = "Please enter a valid price.";
                     }
                     if (priceStr.isEmpty || double.tryParse(priceStr) == null) {
-                      currencyPriceError = "Please enter a valid price.";
+                      currencyPriceRateError = "Please enter a valid price.";
                     }
-                    if (quantityStr.isEmpty ||
-                        int.tryParse(quantityStr) == null) {
+                    if (quantityStr.isEmpty || double.tryParse(quantityStr) == null) {
                       currencyQuantityError = "Please enter a valid quantity.";
                     }
 
                     // If any error exists, setState to update the UI
-                    if (currencyNameError != null ||
-                        currencyPriceError != null ||
+                    if (myanmarRateError != null ||
+                        currencyPriceRateError != null ||
                         currencyQuantityError != null) {
                       setState(() {
-                        // Just calling setState here to trigger UI update
+                        // Trigger UI update
                       });
-                      return; // Stop further processing
+                      return; // Stop further processing if errors exist
                     }
-                    int index =0;
-                    index +1;
 
-                    // Proceed with submission if all validations pass
-                    String _currencyName = currencyName.text;
+                    // Processing All Data
                     double price = double.parse(priceStr);
                     double quantity = double.parse(quantityStr);
-                    double totalPrice = price * quantity;
-                    CurrencyInvestmentDataModel currencyDataModel = CurrencyInvestmentDataModel(investmentId: index, investmentCurrencyName: _currencyName, investmentCurrencyQuantity: quantity, investmentCurrencyPrice: price, investmentCurrencyDatTime: DateTime.now(), investmentTotalPrice: totalPrice);
-                    print("Current Index is $index");
-                    ProviderData _myProviderKey = context.read<ProviderData>();
-                      _myProviderKey.insertingCurrencyDataAtCrypto(widget.cryptoName, currencyDataModel);
+                    double myanmarRate = double.parse(myanmarRateStr);
+                    double tonInDollar = (price + 0.02) * quantity;
+                    double totalPrice = (tonInDollar * myanmarRate);
+
+                    // Create CurrencyInvestmentDataModel object
+                    CurrencyInvestmentDataModel currencyDataModel = CurrencyInvestmentDataModel(
+                      investmentId: 0, // Set appropriate value for index
+                      investmentCurrencyName: name,
+                      investmentCurrencyQuantity: quantity,
+                      investmentCurrencyDatTime: DateTime.now(),
+                      investmentTotalPrice: totalPrice,
+                      investmentCurrencyPriceRate: price,
+                      myanmarDollarRate: myanmarRate,
+                    );
+
+                    // Call provider to insert data
+                    ProviderData myProviderKey = context.read<ProviderData>();
+                    myProviderKey.insertingCurrencyDataAtCrypto(
+                        widget.cryptoName, currencyDataModel
+                    );
+
+                    // Clear fields and close the dialog
+                    currencyQuantity.clear();
+                    myanmarDollarRatePrice.clear();
+                    currencyRate.clear();
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -417,6 +479,10 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                 ),
                 InkWell(
                   onTap: () {
+                    // Reset and close the dialog
+                    currencyQuantity.clear();
+                    myanmarDollarRatePrice.clear();
+                    currencyRate.clear();
                     Navigator.of(context).pop();
                   },
                   child: Container(
@@ -442,4 +508,5 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
       },
     );
   }
+
 }

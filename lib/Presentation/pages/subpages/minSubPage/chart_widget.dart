@@ -49,17 +49,15 @@ class InvestmentDataChart extends StatelessWidget {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  "\$5234324",
+                  "5234324",
                   style: TextStyle(
-                      fontFamily: 'JainiPurva',
+                      fontFamily: 'Jersey',
                       color: Colors.white, fontSize: 24),
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Dollar",
-
+                  "MMK",
                   style: TextStyle(
-                      fontFamily: 'Jersey',
                       color: Colors.white, fontSize: 24),
                 ),
               ],

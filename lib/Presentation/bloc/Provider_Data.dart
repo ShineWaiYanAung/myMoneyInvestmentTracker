@@ -30,9 +30,10 @@ class ProviderData extends ChangeNotifier {
         print("Inserted currency data:");
         print("  Currency Name: ${currencyData.investmentCurrencyName}");
         print("  Currency Quantity: ${currencyData.investmentCurrencyQuantity}");
-        print("  Currency Price: ${currencyData.investmentCurrencyPrice}");
+        print("  Currency Price: ${currencyData.investmentCurrencyPriceRate}");
         print("  Total Investment Price: ${currencyData.investmentTotalPrice}");
         print("  Investment Date: ${currencyData.investmentCurrencyDatTime}");
+        print("  Myanamr Rate is ${currencyData.myanmarDollarRate}");
 
         // Print the updated details of the Crypto
         print("Updated Crypto: ${crypto.cryptoName}");
@@ -42,7 +43,7 @@ class ProviderData extends ChangeNotifier {
         // Optionally, print out all the currency investments for this crypto
         print("  Current Investments:");
         for (var investment in crypto.currencyInvestmentData ?? []) {
-          print("    ${investment.investmentCurrencyName}: ${investment.investmentCurrencyQuantity} @ ${investment.investmentCurrencyPrice} each, Total: ${investment.investmentTotalPrice}");
+          print("    ${investment.investmentCurrencyName}: ${investment.investmentCurrencyQuantity} @ ${investment.investmentCurrencyPriceRate} each, Total: ${investment.investmentTotalPrice}");
         }
 
         notifyListeners();
