@@ -34,7 +34,9 @@ class _InvestmentTitleState extends State<InvestmentTitle> {
                       itemCount: cryptoListTileData.length,
                       itemBuilder: (context, index) {
                         int number = index + 1;
+
                         final eachCryptoTile = cryptoListTileData[index];
+                       print("Your Data Investment Data is ${ eachCryptoTile.currencyInvestmentData?.length}");
                         return Padding(
                           padding: EdgeInsets.only(bottom: 20),
                           child: Card(

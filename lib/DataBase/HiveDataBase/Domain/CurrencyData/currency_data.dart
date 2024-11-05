@@ -1,7 +1,7 @@
 class CurrencyInvestmentData {
   final int investmentId;
   final String investmentCurrencyName;
-  final String investmentCurrencyQuantity;
+  final double investmentCurrencyQuantity;
   final double investmentCurrencyPrice;
   final DateTime investmentCurrencyDatTime;
   final double investmentTotalPrice;

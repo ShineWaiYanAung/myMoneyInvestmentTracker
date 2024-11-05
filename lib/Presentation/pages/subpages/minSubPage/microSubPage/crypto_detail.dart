@@ -9,7 +9,8 @@ import '../../../../widgets/back_button.dart';
 class CryptoTypeDetail extends StatefulWidget {
   final String cryptoName;
   final File image;
-  const CryptoTypeDetail({super.key, required this.cryptoName,required this.image});
+  const CryptoTypeDetail(
+      {super.key, required this.cryptoName, required this.image});
 
   @override
   State<CryptoTypeDetail> createState() => _CryptoTypeDetailState();
@@ -71,12 +72,13 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                             height: 120,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: FileImage(widget.image), // Use FileImage instead of Image.file
-                                fit: BoxFit.cover, // Adjust the image fit as needed
+                                image: FileImage(widget
+                                    .image), // Use FileImage instead of Image.file
+                                fit: BoxFit
+                                    .cover, // Adjust the image fit as needed
                               ),
                             ),
                           ),
-
                           Column(
                             children: [
                               buildCurrencyData(true, "TON"),
@@ -107,7 +109,10 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CurrencyDetailData(currencyName: 'TON',path:"asset/investingCurrencyPic/ton.png" ,),
+                          builder: (context) => CurrencyDetailData(
+                            currencyName: 'TON',
+                            path: "asset/investingCurrencyPic/ton.png", cryptoName: widget.cryptoName,
+                          ),
                         ),
                       );
                     },
@@ -116,7 +121,11 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => CurrencyDetailData(currencyName: 'Star',path: "asset/investingCurrencyPic/star.png",),
+                          builder: (context) => CurrencyDetailData(
+                            cryptoName: widget.cryptoName,
+                            currencyName: 'Star',
+                            path: "asset/investingCurrencyPic/star.png",
+                          ),
                         ),
                       );
                     },
