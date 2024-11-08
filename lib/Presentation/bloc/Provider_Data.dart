@@ -15,6 +15,8 @@ class ProviderData extends ChangeNotifier {
     cryptoInvestedData.remove(cryptoData);
     notifyListeners();
   }
+
+  //InsertingDataIntoCrypto
   void insertingCurrencyDataAtCrypto(
       String cryptoName, CurrencyInvestmentDataModel currencyData) {
     // Find the Crypto instance that matches the cryptoName
@@ -55,9 +57,24 @@ class ProviderData extends ChangeNotifier {
     print("No crypto found with the name: $cryptoName");
 
   }
+  void deletingCurrencyDataAtCrypto(
+      String cryptoName, CurrencyInvestmentDataModel currencyData) {
+    // Find the Crypto instance that matches the cryptoName
+    for (var crypto in cryptoInvestedData) {
+
+      if (crypto.cryptoName.toLowerCase() == cryptoName.toLowerCase()) {
+        crypto.currencyInvestmentData?.remove(currencyData);
+        notifyListeners();
+        return; // Exit after updating the first match
+      }
+    }
+    // Optionally, you could handle the case where no matching crypto is found
+    print("No crypto found with the name: $cryptoName");
+
+  }
 
 
-
+  //ShowingSnackBar
   void showSnackBar(BuildContext context, String text, bool isGreen) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -142,12 +142,24 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                               String formattedPrice = currencyEachData
                                           .investmentTotalPrice >=
                                       100000
-                                  ? "MMK ${(currencyEachData.investmentTotalPrice / 100000).toStringAsFixed(1)} Lakhs"
+                                  ? "MMK ${(currencyEachData.investmentTotalPrice / 100000).toStringAsFixed(4)} Lakhs"
                                   : "MMK ${currencyEachData.investmentTotalPrice.toStringAsFixed(2)}";
                               String formattedDate =
                                   DateFormat("M/d/yyyy 'at' h:mm a 'on' E")
                                       .format(currencyEachData
                                           .investmentCurrencyDatTime);
+
+                              double quantityStarOrTon = 0;
+                             if(widget.currencyName.toLowerCase()=="star"){
+                               double starConvert =  currencyEachData.investmentCurrencyQuantity / 0.003167;
+
+                               quantityStarOrTon = starConvert;
+                             }
+                             else{
+                               quantityStarOrTon = currencyEachData.investmentCurrencyQuantity;
+                             }
+                              String formattedQuantity = quantityStarOrTon >=1000 ? "${(quantityStarOrTon/1000).toStringAsFixed(2)}K": quantityStarOrTon.toStringAsFixed(0) ;
+
                               ///////////////////////////////////////
 
                               return Padding(
@@ -179,9 +191,7 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                                           width: 50,
                                         ),
                                         Text(
-                                          currencyEachData
-                                              .investmentCurrencyQuantity
-                                              .toString(),
+                                          formattedQuantity,
                                           style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w500,
@@ -198,7 +208,15 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                                     ),
                                     trailing: IconButton(
                                       ///Need To Do
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        ProviderData myProviderKey = context.read<ProviderData>();
+                                        myProviderKey.deletingCurrencyDataAtCrypto(
+                                            widget.cryptoName, currencyEachData
+                                        );
+                                        setState(() {
+
+                                        });
+                                      },
                                       icon: Icon(
                                         Icons.delete,
                                         color: Colors.red,
@@ -215,13 +233,21 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                                                 fontWeight: FontWeight.w500,
                                                 color: Theme.of(context).focusColor),
                                           ),
+                                          SizedBox(height: 15,),
+                                          Text(
+                                            "TON Rate ${currencyEachData.investmentCurrencyPriceRate.toString()}",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                                color: Theme.of(context).focusColor),
+                                          ),
                                           SizedBox(
                                             height: 20,
                                           ),
                                           Text(
                                             formattedDate,
                                             style: TextStyle(
-                                                fontSize: 15,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.w500,
                                                 color: Colors.blueAccent),
                                           ),
@@ -432,17 +458,25 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                     }
 
                     // Processing All Data
+                    double finalQuantity = 0.0;
                     double price = double.parse(priceStr);
-                    double quantity = double.parse(quantityStr);
+                    if(widget.currencyName.toLowerCase() =="star"){
+                     double starQuantity = double.parse(quantityStr);
+                     double starConversion = 0.003167 *starQuantity;
+                     finalQuantity = starConversion;
+                    }
+                    else{
+                      finalQuantity = double.parse(quantityStr);
+                    }
                     double myanmarRate = double.parse(myanmarRateStr);
-                    double tonInDollar = (price + 0.02) * quantity;
+                    double tonInDollar = (price + 0.02) * finalQuantity;
                     double totalPrice = (tonInDollar * myanmarRate);
 
                     // Create CurrencyInvestmentDataModel object
                     CurrencyInvestmentDataModel currencyDataModel = CurrencyInvestmentDataModel(
                       investmentId: 0, // Set appropriate value for index
                       investmentCurrencyName: name,
-                      investmentCurrencyQuantity: quantity,
+                      investmentCurrencyQuantity: finalQuantity,
                       investmentCurrencyDatTime: DateTime.now(),
                       investmentTotalPrice: totalPrice,
                       investmentCurrencyPriceRate: price,
