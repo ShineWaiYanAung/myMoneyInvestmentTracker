@@ -1,12 +1,13 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:money_investment_track/Function/funcation_controller.dart';
-import 'package:money_investment_track/DataBase/HiveDataBase/Domain/CryptoEntity/cryptoModel.dart';
+import 'package:money_investment_track/Presentation/pages/main_screen.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/stack_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:provider/provider.dart';
+import '../../../../../BLOC/funcation_controller.dart';
+import '../../../../../DataBase/HiveDataBase/Domain/Crypto/crypto.dart';
 import '../../../../widgets/back_button.dart';
 
 class CryptoTypeDetail extends StatefulWidget {
@@ -19,45 +20,56 @@ class CryptoTypeDetail extends StatefulWidget {
   State<CryptoTypeDetail> createState() => _CryptoTypeDetailState();
 }
 
-
 class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
+  // These totals will be recalculated on every build
+  double totalStar = 0.0;
+  double totalStarInTon = 0.0;
+  double totalTon = 0.0;
+  double totalInvestmentData = 0.0;
 
+  @override
+  void initState() {
+    super.initState();
+    // Initially reset values
+    resetTotals();
+  }
 
+  // Method to reset totals
+  void resetTotals() {
+    totalStar = 0.0;
+    totalStarInTon = 0.0;
+    totalTon = 0.0;
+    totalInvestmentData = 0.0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    double totalStar = 0.0;
-    double totalStarInTon = 0.0;
-    double totalTon = 0.0;
-
+    // Reset the totals each time the widget rebuilds (this includes when you navigate back)
+    resetTotals();
 
     return Scaffold(
       body: SafeArea(
         child: Consumer<ProviderData>(
           builder: (BuildContext context, ProviderData value, Widget? child) {
-            List<CryptoModel> myCryptoData = value.cryptoInvestedData;
+            List<Crypto> myCryptoData = value.cryptoInvestedData;
 
-            // Initialize total amounts for Star and Ton
-
-
-            // Loop through each Crypto data
+            // Calculate the totals for the selected crypto
             for (var crypto in myCryptoData) {
-              // Check if currencyInvestmentData is not null and not empty before iterating
-            if(crypto.cryptoName == widget.cryptoName){
-              if (crypto.currencyInvestmentData?.isNotEmpty ?? false) {
-                for (var investmentData in crypto.currencyInvestmentData!) {
-                  // Check for 'Star' and 'Ton' currencies and sum their total investment prices
-                  if (investmentData.investmentCurrencyName.toLowerCase() == 'star') {
-                    totalStarInTon += investmentData.investmentCurrencyQuantity;
-                    totalStar += investmentData.investmentCurrencyQuantity/ 0.003167;
-                  } else if (investmentData.investmentCurrencyName.toLowerCase() == 'ton') {
-                    totalTon += investmentData.investmentCurrencyQuantity;
+              if (crypto.cryptoName == widget.cryptoName) {
+                if (crypto.currencyInvestmentData?.isNotEmpty ?? false) {
+                  for (var investmentData in crypto.currencyInvestmentData!) {
+                    // Check if 'Star' or 'Ton' and sum the totals
+                    if (investmentData.investmentCurrencyName.toLowerCase() == 'star') {
+                      totalStarInTon += investmentData.investmentCurrencyQuantity;
+                      totalStar += investmentData.investmentCurrencyQuantity / 0.003167;
+                      totalInvestmentData += investmentData.investmentTotalPrice;
+                    } else if (investmentData.investmentCurrencyName.toLowerCase() == 'ton') {
+                      totalTon += investmentData.investmentCurrencyQuantity;
+                      totalInvestmentData += investmentData.investmentTotalPrice;
+                    }
                   }
                 }
-
               }
-            }
-
             }
 
             return ListView(
@@ -76,7 +88,9 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                     children: [
                       BackButtonWidget(
                         isColorChange: true,
-                        currencyName: widget.cryptoName,
+                        currencyName: widget.cryptoName, onNavigate: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => StackWidget(),));
+                      },
                       ),
                       PieChart(
                         chartRadius: 250,
@@ -91,10 +105,11 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                           showChartValuesInPercentage: true,
                         ),
                         animationDuration: const Duration(seconds: 2),
-                        dataMap: ChartPercentageCalculator(ton: totalTon, star: totalStarInTon).percentageResult(),
+                        dataMap: ChartPercentageCalculator(
+                            ton: totalTon, star: totalStarInTon)
+                            .percentageResult(),
                         legendOptions: const LegendOptions(
-                          showLegends:
-                              false, // Set this to false to hide the legend
+                          showLegends: false, // Set this to false to hide the legend
                         ),
                       ),
                       SizedBox(height: 40),
@@ -109,14 +124,13 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                                 height: 120,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: FileImage(widget
-                                        .image), // Use FileImage instead of Image.file
-                                    fit: BoxFit
-                                        .cover, // Adjust the image fit as needed
+                                    image: FileImage(widget.image),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   buildCurrencyData(true, "TON", totalTon.toStringAsFixed(1)),
                                   buildCurrencyData(false, "Star", totalStar.toStringAsFixed(1)),
@@ -124,15 +138,10 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                               )
                             ],
                           ),
-                          SizedBox(
-                            height: 30,
-                          ),
-
-                          ///TotalPrice
-                          buildTotalCostOfCurrency("1000"),
-                          SizedBox(
-                            height: 20,
-                          ),
+                          SizedBox(height: 30),
+                          // Display the total investment
+                          buildTotalCostOfCurrency(totalInvestmentData.toStringAsFixed(1)),
+                          SizedBox(height: 20),
                         ],
                       )
                     ],
@@ -147,6 +156,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => CurrencyDetailData(
+                                image: widget.image,
                                 currencyName: 'TON',
                                 path: "asset/investingCurrencyPic/ton.png",
                                 cryptoName: widget.cryptoName,
@@ -160,6 +170,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => CurrencyDetailData(
+                                image: widget.image,
                                 cryptoName: widget.cryptoName,
                                 currencyName: 'Star',
                                 path: "asset/investingCurrencyPic/star.png",
@@ -178,8 +189,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
     );
   }
 
-  Widget buildCurrencyButton(
-      {required VoidCallback onPressed, required String path}) {
+  Widget buildCurrencyButton({required VoidCallback onPressed, required String path}) {
     return InkWell(
       onTap: onPressed,
       child: SizedBox(
@@ -193,19 +203,21 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
     );
   }
 
-  //CurrencyNameAndQuantity
-  Widget buildCurrencyData(
-      bool isTon, String currencyName, String currencyAmount) {
+  // CurrencyName and Quantity Display
+  Widget buildCurrencyData(bool isTon, String currencyName, String currencyAmount) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          currencyName,
-          style: TextStyle(
-              color: isTon ? Color(0xff099aed) : Color(0xfffed008),
-              fontFamily: "Jersey",
-              fontWeight: FontWeight.w500,
-              fontSize: 30),
+        SizedBox(
+          width: 60,
+          child: Text(
+            currencyName,
+            style: TextStyle(
+                color: isTon ? Color(0xff099aed) : Color(0xfffed008),
+                fontFamily: "Jersey",
+                fontWeight: FontWeight.w500,
+                fontSize: 30),
+          ),
         ),
         const SizedBox(width: 40),
         Text(
@@ -220,7 +232,7 @@ class _CryptoTypeDetailState extends State<CryptoTypeDetail> {
     );
   }
 
-  //TotalPriceOfTheCurrency
+  // Total Price of the Currency
   Widget buildTotalCostOfCurrency(String totalAmount) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

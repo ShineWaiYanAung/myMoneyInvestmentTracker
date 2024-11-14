@@ -5,7 +5,7 @@ class ChartPercentageCalculator {
   ChartPercentageCalculator({required this.ton, required this.star}) ;
 
 
-   Map<String, double> percentageResult () {
+  Map<String, double> percentageResult () {
     final double totalValue = ton + star;
 
     final double tonPercentage = (ton / totalValue) * 100;

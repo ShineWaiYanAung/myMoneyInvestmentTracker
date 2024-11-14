@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:animated_segmented_tab_control/animated_segmented_tab_control.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/investment_title.dart';
+import 'package:provider/provider.dart';
 
+import '../../bloc/Provider_Data.dart';
 import '../../widgets/componets/tab_bar_item.dart';
 import 'minSubPage/chart_widget.dart';
 
@@ -25,7 +26,7 @@ class MainScreenControl extends StatefulWidget {
 
 class _MainScreenControl extends State<MainScreenControl>
     with SingleTickerProviderStateMixin {
-  int selectedTabIndex = 0;
+  int selectedTabIndex = 1;
 
 
   late AnimationController _controller;
@@ -35,6 +36,10 @@ class _MainScreenControl extends State<MainScreenControl>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      final cryptoProvider = Provider.of<ProviderData>(context,listen :false);
+      cryptoProvider.loadCryptoData();
+    }) ;
     // Increase duration to 16 seconds for a slower animation
     _controller =
         AnimationController(duration: Duration(seconds: 20), vsync: this);
@@ -101,7 +106,7 @@ class _MainScreenControl extends State<MainScreenControl>
     ];
     return SafeArea(
         child: Stack(
-      children: [
+              children: [
         Padding(
           padding: const EdgeInsets.only(right: 20.0, left: 20, top: 10),
           child: Column(
@@ -174,7 +179,7 @@ class _MainScreenControl extends State<MainScreenControl>
           ),
         ),
         Positioned(
-          bottom: widget.height * 0.1, // Adjust this value if necessary
+          bottom:90,// Adjust this value if necessary
           left: widget.width * 0.12, // Or use right for more control
           right: widget.width * 0.12,
           child: Container(
@@ -203,8 +208,8 @@ class _MainScreenControl extends State<MainScreenControl>
             ),
           ),
         ),
-      ],
-    ));
+              ],
+            ));
   }
 
   @override

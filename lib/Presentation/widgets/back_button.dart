@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class BackButtonWidget extends StatelessWidget {
   final bool isColorChange;
   final String currencyName;
+  final VoidCallback onNavigate;
   const BackButtonWidget({
     super.key,
     required this.isColorChange,
-    required this.currencyName,
+    required this.currencyName, required this.onNavigate,
   });
 
   @override
@@ -15,9 +16,7 @@ class BackButtonWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-            onTap: (){
-              Navigator.of(context).pop();
-            },
+            onTap: onNavigate,
             child: Image.asset(isColorChange ? "asset/backButton/backButtonCurrency.png" : "asset/backButton/backButtonType.png")),
         Text(
           currencyName,
