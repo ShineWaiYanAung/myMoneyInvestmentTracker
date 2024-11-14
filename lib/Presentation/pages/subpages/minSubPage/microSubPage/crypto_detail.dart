@@ -6,8 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/currency_detail_data.dart';
 import 'package:pie_chart/pie_chart.dart';
-import '../../../../../BLOC/funcation_controller.dart';
+
 import '../../../../../DataBase/HiveDataBase/Domain/Crypto/crypto.dart';
+import '../../../../../Function/funcation_controller.dart';
 import '../../../../widgets/back_button.dart';
 
 class CryptoTypeDetail extends StatefulWidget {

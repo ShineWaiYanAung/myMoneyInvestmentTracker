@@ -178,35 +178,39 @@ class _MainScreenControl extends State<MainScreenControl>
             ],
           ),
         ),
-        Positioned(
-          bottom:90,// Adjust this value if necessary
-          left: widget.width * 0.12, // Or use right for more control
-          right: widget.width * 0.12,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            alignment: Alignment.center,
-            height: 100,
-            decoration: BoxDecoration(
-              color: Color(0xff151932),
-              borderRadius: BorderRadius.circular(60),
+        Consumer<ProviderData>(builder: (BuildContext context, value, Widget? child) {
+          final isShow = value.isShow;
+          return isShow ? Positioned(
+            bottom:90,// Adjust this value if necessary
+            left: widget.width * 0.12, // Or use right for more control
+            right: widget.width * 0.12,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 0),
+              alignment: Alignment.center,
+              height: 100,
+              decoration: BoxDecoration(
+                color: Color(0xff151932),
+                borderRadius: BorderRadius.circular(60),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceEvenly, // This evenly spaces the children
+                children: [
+                  TabBarItem(
+                    label: "Chart",
+                    isOnTap: selectedTabIndex == 0,
+                    onPressed: () => onTabTapped(0),
+                  ),
+                  TabBarItem(
+                    label: "Invest",
+                    isOnTap: selectedTabIndex == 1,
+                    onPressed: () => onTabTapped(1),
+                  ),
+                ],
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceEvenly, // This evenly spaces the children
-              children: [
-                TabBarItem(
-                  label: "Chart",
-                  isOnTap: selectedTabIndex == 0,
-                  onPressed: () => onTabTapped(0),
-                ),
-                TabBarItem(
-                  label: "Invest",
-                  isOnTap: selectedTabIndex == 1,
-                  onPressed: () => onTabTapped(1),
-                ),
-              ],
-            ),
-          ),
+          ) : SizedBox();
+        },
         ),
               ],
             ));

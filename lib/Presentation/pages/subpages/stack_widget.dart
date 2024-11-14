@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/drawer_app.dart';
+import 'package:provider/provider.dart';
 import 'main_screen_control.dart';
 
 class StackWidget extends StatefulWidget {
@@ -30,6 +32,8 @@ class _StackWidget extends State<StackWidget> {
       });
     });
   }
+
+  bool isShowNav = true;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +89,22 @@ class _StackWidget extends State<StackWidget> {
               scaffoldKey: _scaffoldKey,
             ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: () {
+          final myKey = context.read<ProviderData>();
+          myKey.removeOrAddNav();
+        },
+        child: Consumer<ProviderData>(
+          builder: (BuildContext context, ProviderData value, Widget? child) {
+            return Icon(
+              value.isShow ? Icons.add : Icons.remove,
+              size: 40,
+              color: Theme.of(context).scaffoldBackgroundColor,
+            );
+          },
+        ),
       ),
     );
   }

@@ -8,8 +8,17 @@ import '../../DataBase/HiveDataBase/Domain/CurrencyData/currency_data.dart';
 
 class ProviderData extends ChangeNotifier {
   List<Crypto> cryptoInvestedData = [];
+  bool isShow = true;
   String? _name;
   String? get name => _name;
+
+
+  ///change the Nav
+  void removeOrAddNav(){
+    isShow = !isShow;
+    notifyListeners();
+    print("NAV STATE $isShow");
+  }
 
   final box = Boxes.getCryptoData();
 
