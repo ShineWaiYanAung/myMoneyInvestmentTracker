@@ -1,60 +1,117 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../DataBase/HiveDataBase/Domain/CryptoEntity/cryptoModel.dart';
-import '../../DataBase/HiveDataBase/Domain/CurrencyModel/currency_model.dart';
+import 'package:money_investment_track/DataBase/HiveDataBase/Domain/LoginName/boxes_username.dart';
+import 'package:money_investment_track/DataBase/HiveDataBase/Domain/LoginName/user_name.dart';
+import '../../DataBase/HiveDataBase/Box/box.dart';
+import '../../DataBase/HiveDataBase/Domain/Crypto/crypto.dart';
+import '../../DataBase/HiveDataBase/Domain/CurrencyData/currency_data.dart';
 
 class ProviderData extends ChangeNotifier {
-  List<CryptoModel> cryptoInvestedData = [];
+  List<Crypto> cryptoInvestedData = [];
+  String? _name;
+  String? get name => _name;
 
-  void insertingData(CryptoModel cryptoData) {
+  final box = Boxes.getCryptoData();
+
+  final userNameBox = BoxesUsername.getUserNameData();
+
+  Future<void> addOrUpdateNameData(UserName name) async {
+    print("addOrUpdateNameData called with name: ${name.name}");
+
+    if (userNameBox.isNotEmpty) {
+      // If a username exists, update it instead of adding a new one
+      final existingUserName = userNameBox.values.first;
+      print("Existing username found: ${existingUserName.name}, deleting it...");
+      await existingUserName.delete();
+    }
+
+    // Add the new username
+    await userNameBox.add(name);
+    _name = name.name;
+    print("New username added: ${name.name}");
+
+    // Load the name data again after adding it
+    await loadNameData(); // Ensure we load the newly added data
+
+    notifyListeners();
+  }
+
+  Future<void> loadNameData() async {
+    print("Loading name data...");
+
+    if (userNameBox.isNotEmpty) {
+      _name = userNameBox.values.first.name;
+      print("Loaded name: $_name");
+    } else {
+      print("No username found in Hive");
+    }
+
+    notifyListeners();
+  }
+
+
+  Future<void> loadCryptoData() async{
+    cryptoInvestedData = [];
+    if(box.isNotEmpty){
+      cryptoInvestedData = box.values.toList();
+      print("Data are Coming");
+      notifyListeners();
+    }
+    else{
+      print("Sadly there has no data");
+    }
+  }
+  void insertingData(Crypto cryptoData) {
     cryptoInvestedData.add(cryptoData);
+    box.add(cryptoData);
     notifyListeners();
   }
-
-  void deletingData(CryptoModel cryptoData) {
+  void deletingData(Crypto cryptoData) {
     cryptoInvestedData.remove(cryptoData);
+    cryptoData.delete();
     notifyListeners();
   }
-  void insertingCurrencyDataAtCrypto(
-      String cryptoName, CurrencyInvestmentDataModel currencyData) {
+  Future<void> insertingCurrencyDataAtCrypto(
+      String cryptoName, CurrencyInvestmentData currencyData) async {
+
     // Find the Crypto instance that matches the cryptoName
     for (var crypto in cryptoInvestedData) {
-      print("THis is Fist  Name ${crypto.cryptoName}");
-      print("THis is Second  Name ${cryptoName}");
-
       if (crypto.cryptoName.toLowerCase() == cryptoName.toLowerCase()) {
         // If found, add the currency data to its investment list
         crypto.currencyInvestmentData?.add(currencyData);
 
-        // Print detailed information about the inserted currency data
-        print("Inserted currency data:");
-        print("  Currency Name: ${currencyData.investmentCurrencyName}");
-        print("  Currency Quantity: ${currencyData.investmentCurrencyQuantity}");
-        print("  Currency Price: ${currencyData.investmentCurrencyPriceRate}");
-        print("  Total Investment Price: ${currencyData.investmentTotalPrice}");
-        print("  Investment Date: ${currencyData.investmentCurrencyDatTime}");
-        print("  Myanamr Rate is ${currencyData.myanmarDollarRate}");
+        // Update the Crypto object in the Hive box to persist the changes
+        await crypto.save();
 
-        // Print the updated details of the Crypto
-        print("Updated Crypto: ${crypto.cryptoName}");
-        print("  Image Path: ${crypto.cryptoImage.path}");
-        print("  Total Currency Investments: ${crypto.currencyInvestmentData?.length}");
-
-        // Optionally, print out all the currency investments for this crypto
-        print("  Current Investments:");
-        for (var investment in crypto.currencyInvestmentData ?? []) {
-          print("    ${investment.investmentCurrencyName}: ${investment.investmentCurrencyQuantity} @ ${investment.investmentCurrencyPriceRate} each, Total: ${investment.investmentTotalPrice}");
-        }
-
+        // Notify listeners to update UI
         notifyListeners();
         return; // Exit after updating the first match
       }
     }
 
+    // Handle the case where no matching crypto is found
+    print("No crypto found with the name: $cryptoName");
+  }
+
+
+  void deletingCurrencyDataAtCrypto(
+      String cryptoName, CurrencyInvestmentData currencyData) {
+    // Find the Crypto instance that matches the cryptoName
+    for (var crypto in cryptoInvestedData) {
+
+      if (crypto.cryptoName.toLowerCase() == cryptoName.toLowerCase()) {
+        crypto.currencyInvestmentData?.remove(currencyData);
+        crypto.save();
+        notifyListeners();
+        return; // Exit after updating the first match
+      }
+    }
     // Optionally, you could handle the case where no matching crypto is found
     print("No crypto found with the name: $cryptoName");
 
   }
+
+
 
 
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/Presentation/pages/subpages/stack_widget.dart';
+import 'package:provider/provider.dart';
 
 class MainScreenPage extends StatefulWidget {
   const MainScreenPage({super.key});
@@ -120,13 +122,18 @@ class _MainScreenPageState extends State<MainScreenPage> {
             duration: Duration(seconds: 1),
             top: 350,
             left: nameTextPosition, // Final position for name text
-            child: Text(
-              "Shine Wai Yan Aung",
-              style: TextStyle(
-                fontFamily: 'Jersey',
-                fontSize: 35,
-                color: Colors.white,
-              ),
+            child: Consumer<ProviderData>(
+              builder: (BuildContext context, ProviderData value, Widget? child) {
+              return  Text(
+                  value.name!.isEmpty ? "I.C.S": value.name!,
+                  style: TextStyle(
+                    fontFamily: 'Jersey',
+                    fontSize: 35,
+                    color: Colors.white,
+                  ),
+                );
+              },
+
             ),
           ),
         ],

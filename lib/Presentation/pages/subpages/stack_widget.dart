@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/drawer_app.dart';
-
 import 'main_screen_control.dart';
 
 class StackWidget extends StatefulWidget {
@@ -12,25 +10,25 @@ class StackWidget extends StatefulWidget {
 }
 
 class _StackWidget extends State<StackWidget> {
-  double topPosition = 0; // Start off-screen for top rectangle
-  double bottomPosition = 0; // Start off-screen for bottom rectangle
+  double topPosition = 0;
+  double bottomPosition = 0;
   double menuOpacity = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Track whether the drawer is open or closed
+  bool _isDrawerOpen = false;
 
   @override
   void initState() {
     super.initState();
-    // Trigger animation after the widget is built
+
     Future.delayed(Duration(milliseconds: 2000), () {
       setState(() {
-        topPosition = -100; // Move to the top of the screen
-        bottomPosition = -100; // Move to the bottom of the screen
+        topPosition = -200;
+        bottomPosition = -100;
         menuOpacity = 1;
       });
     });
-
-    // Show the drawer after a delay
-
   }
 
   @override
@@ -40,7 +38,13 @@ class _StackWidget extends State<StackWidget> {
 
     return Scaffold(
       key: _scaffoldKey,
-      drawer: CustomDrawer(), // Keep the drawer always in the tree
+      drawer: CustomDrawer(),
+      // Use the onDrawerChanged callback to track drawer state
+      onDrawerChanged: (isOpen) {
+        setState(() {
+          _isDrawerOpen = isOpen;
+        });
+      },
       body: Stack(
         children: [
           Stack(
@@ -62,7 +66,7 @@ class _StackWidget extends State<StackWidget> {
                 bottom: bottomPosition,
                 left: 0,
                 child: SizedBox(
-                  width: width, // Ensure to define width for bottom rectangle
+                  width: width,
                   child: Image.asset(
                     "asset/screenAnimate/bottomRectangle.png",
                     fit: BoxFit.fill,
@@ -71,12 +75,15 @@ class _StackWidget extends State<StackWidget> {
               ),
             ],
           ),
-          MainScreenControl(
-            menuOpacity: menuOpacity,
-            width: width,
-            height: height,
-            scaffoldKey: _scaffoldKey,
-          ),
+
+          // Conditionally show MainScreenControl based on drawer state
+          if (!_isDrawerOpen)
+            MainScreenControl(
+              menuOpacity: menuOpacity,
+              width: width,
+              height: height,
+              scaffoldKey: _scaffoldKey,
+            ),
         ],
       ),
     );

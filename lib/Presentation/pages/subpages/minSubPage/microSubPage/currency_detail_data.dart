@@ -1,20 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_investment_track/Presentation/pages/subpages/minSubPage/microSubPage/crypto_detail.dart';
 import 'package:money_investment_track/Presentation/widgets/back_button.dart';
 import 'package:provider/provider.dart';
 import 'package:lottie/lottie.dart';
-import '../../../../../DataBase/HiveDataBase/Domain/CurrencyModel/currency_model.dart';
+import '../../../../../DataBase/HiveDataBase/Domain/CurrencyData/currency_data.dart';
 import '../../../../bloc/Provider_Data.dart';
 
 class CurrencyDetailData extends StatefulWidget {
   final String cryptoName;
   final String currencyName;
   final String path;
+  final File image;
   const CurrencyDetailData(
       {super.key,
-      required this.currencyName,
-      required this.path,
-      required this.cryptoName});
+        required this.currencyName,
+        required this.path,
+        required this.cryptoName, required this.image});
 
   @override
   State<CurrencyDetailData> createState() => _CurrencyDetailDataState();
@@ -29,7 +33,7 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    List<CurrencyInvestmentDataModel> currencyModelList = [];
+    List<CurrencyInvestmentData> currencyModelList = [];
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -49,7 +53,13 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: BackButtonWidget(
-                  isColorChange: true, currencyName: widget.currencyName),
+                  isColorChange: true, currencyName: widget.currencyName, onNavigate: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => CryptoTypeDetail(cryptoName: widget.cryptoName, image: widget.image),
+                  ),
+                );
+              },),
             ),
             SizedBox(
               width: width * 0.5,
@@ -131,108 +141,140 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
 
                     return currencyModelList.isEmpty
                         ? Center(
-                            child: Lottie.asset("lottieJson/emptyShow.json"),
-                          )
+                      child: Lottie.asset("lottieJson/emptyShow.json"),
+                    )
                         : ListView.builder(
-                            itemCount: currencyModelList.length,
-                            itemBuilder: (context, index) {
-                              ///AssigningTheData
-                              final currencyEachData = currencyModelList[index];
-                              int number = index + 1;
-                              String formattedPrice = currencyEachData
-                                          .investmentTotalPrice >=
-                                      100000
-                                  ? "MMK ${(currencyEachData.investmentTotalPrice / 100000).toStringAsFixed(1)} Lakhs"
-                                  : "MMK ${currencyEachData.investmentTotalPrice.toStringAsFixed(2)}";
-                              String formattedDate =
-                                  DateFormat("M/d/yyyy 'at' h:mm a 'on' E")
-                                      .format(currencyEachData
-                                          .investmentCurrencyDatTime);
-                              ///////////////////////////////////////
+                        itemCount: currencyModelList.length,
+                        itemBuilder: (context, index) {
+                          ///AssigningTheData
+                          final currencyEachData = currencyModelList[index];
+                          int number = index + 1;
+                          String formattedPrice = currencyEachData
+                              .investmentTotalPrice >=
+                              100000
+                              ? "MMK ${(currencyEachData.investmentTotalPrice / 100000).toStringAsFixed(4)} Lakhs"
+                              : "MMK ${currencyEachData.investmentTotalPrice.toStringAsFixed(2)}";
+                          String formattedDate =
+                          DateFormat("M/d/yyyy 'at' h:mm a 'on' E")
+                              .format(currencyEachData
+                              .investmentCurrencyDatTime);
 
-                              return Padding(
-                                padding: EdgeInsets.only(bottom: 20),
-                                child: Card(
-                                  shadowColor: Color(0xff1C2242),
-                                  elevation: 6,
-                                  color: Colors.white,
-                                  child: ExpansionTile(
-                                    leading: CircleAvatar(
-                                      backgroundColor:
-                                          Theme.of(context).focusColor,
-                                      child: Text(
-                                        number.toString(),
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    title: Row(
-                                      children: [
-                                        Text(
-                                          currencyEachData
-                                              .investmentCurrencyName,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  Theme.of(context).focusColor),
-                                        ),
-                                        SizedBox(
-                                          width: 50,
-                                        ),
-                                        Text(
-                                          currencyEachData
-                                              .investmentCurrencyQuantity
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500,
-                                              color:
-                                                  Theme.of(context).focusColor),
-                                        )
-                                      ],
-                                    ),
-                                    subtitle: Text(
-                                      "$formattedPrice",
-                                      style: TextStyle(
-                                          color: Colors.black.withOpacity(0.7),
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    trailing: IconButton(
-                                      ///Need To Do
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                    children: [
-                                      Column(
-                                        children: [
-                                          SizedBox(height: 10,),
-                                          Text(
-                                            "Myanmar Dollar Rate ${currencyEachData.myanmarDollarRate.toString()}  MMK",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500,
-                                                color: Theme.of(context).focusColor),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Text(
-                                            formattedDate,
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.blueAccent),
-                                          ),
-                                          SizedBox(height: 10,)
-                                        ],
-                                      )
-                                    ],
+                          double quantityStarOrTon = 0;
+                          if(widget.currencyName.toLowerCase()=="star"){
+                            double starConvert =  currencyEachData.investmentCurrencyQuantity / 0.003167;
+
+                            quantityStarOrTon = starConvert;
+                          }
+                          else{
+                            quantityStarOrTon = currencyEachData.investmentCurrencyQuantity;
+                          }
+                          String formattedStarQuantity = quantityStarOrTon >=1000 ?
+                          "${(quantityStarOrTon/1000).toStringAsFixed(2)}K":
+                          quantityStarOrTon.toStringAsFixed(0) ;
+
+                          String formattedTonQuantity = quantityStarOrTon >=1000 ?
+                          "${(quantityStarOrTon/1000).toStringAsFixed(2)}K":
+                          quantityStarOrTon.toStringAsFixed(3) ;
+
+                          ///////////////////////////////////////
+
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 20),
+                            child: Card(
+                              shadowColor: Color(0xff1C2242),
+                              elevation: 6,
+                              color: Colors.white,
+                              child: ExpansionTile(
+                                leading: CircleAvatar(
+                                  backgroundColor:
+                                  Theme.of(context).focusColor,
+                                  child: Text(
+                                    number.toString(),
+                                    style: TextStyle(color: Colors.white),
                                   ),
                                 ),
-                              );
-                            });
+                                title: Row(
+                                  children: [
+                                    Text(
+                                      currencyEachData
+                                          .investmentCurrencyName,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                          Theme.of(context).focusColor),
+                                    ),
+                                    SizedBox(
+                                      width: 50,
+                                    ),
+                                    Text(
+                                      widget.currencyName.toLowerCase()=='star'? formattedStarQuantity :formattedTonQuantity,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                          color:
+                                          Theme.of(context).focusColor),
+                                    )
+                                  ],
+                                ),
+                                subtitle: Text(
+                                  "$formattedPrice",
+                                  style: TextStyle(
+                                      color: Colors.black.withOpacity(0.7),
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: IconButton(
+                                  ///Need To Do
+                                  onPressed: () {
+                                    ProviderData myProviderKey = context.read<ProviderData>();
+                                    myProviderKey.deletingCurrencyDataAtCrypto(
+                                        widget.cryptoName, currencyEachData
+                                    );
+                                    setState(() {
+
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                children: [
+                                  Column(
+                                    children: [
+                                      SizedBox(height: 10,),
+                                      Text(
+                                        "Myanmar Dollar Rate ${currencyEachData.myanmarDollarRate.toString()}  MMK",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Theme.of(context).focusColor),
+                                      ),
+                                      SizedBox(height: 15,),
+                                      Text(
+                                        "TON Rate ${currencyEachData.investmentCurrencyPriceRate.toString()}",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Theme.of(context).focusColor),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        formattedDate,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.blueAccent),
+                                      ),
+                                      SizedBox(height: 10,)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
                   },
                 ),
               ),
@@ -432,17 +474,25 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                     }
 
                     // Processing All Data
+                    double finalQuantity = 0.0;
                     double price = double.parse(priceStr);
-                    double quantity = double.parse(quantityStr);
+                    if(widget.currencyName.toLowerCase() =="star"){
+                      double starQuantity = double.parse(quantityStr);
+                      double starConversion = 0.003167 *starQuantity;
+                      finalQuantity = starConversion;
+                    }
+                    else{
+                      finalQuantity = double.parse(quantityStr);
+                    }
                     double myanmarRate = double.parse(myanmarRateStr);
-                    double tonInDollar = (price + 0.02) * quantity;
+                    double tonInDollar = (price + 0.02) * finalQuantity;
                     double totalPrice = (tonInDollar * myanmarRate);
 
                     // Create CurrencyInvestmentDataModel object
-                    CurrencyInvestmentDataModel currencyDataModel = CurrencyInvestmentDataModel(
+                    CurrencyInvestmentData currencyDataModel = CurrencyInvestmentData(
                       investmentId: 0, // Set appropriate value for index
                       investmentCurrencyName: name,
-                      investmentCurrencyQuantity: quantity,
+                      investmentCurrencyQuantity: finalQuantity,
                       investmentCurrencyDatTime: DateTime.now(),
                       investmentTotalPrice: totalPrice,
                       investmentCurrencyPriceRate: price,
