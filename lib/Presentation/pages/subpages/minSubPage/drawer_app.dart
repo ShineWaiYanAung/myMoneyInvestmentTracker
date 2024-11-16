@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
+import 'package:money_investment_track/Presentation/pages/drawerScreen/about.dart';
+import 'package:money_investment_track/Presentation/pages/drawerScreen/tips_screen.dart';
+import 'package:money_investment_track/enter_screen.dart';
 import 'package:money_investment_track/main.dart';
 import 'package:provider/provider.dart';
 
@@ -86,6 +89,7 @@ class _CustomDrawerState extends State<CustomDrawer>
           builder: (BuildContext context, providerData, Widget? child) {
             // Check if the name is available in the provider
             List <String> name=[];
+            File? image = providerData.profile;
             if(providerData.cryptoInvestedData.isNotEmpty){
               for(var cryptoName in providerData.cryptoInvestedData){
                 name.add(cryptoName.cryptoName);
@@ -94,6 +98,7 @@ class _CustomDrawerState extends State<CustomDrawer>
             String username = providerData.name?.isNotEmpty == true
                 ? providerData.name!
                 : "User";
+            UserName profile = UserName(name: username,profileImage: image);
             return
 
               Column(
@@ -117,7 +122,10 @@ class _CustomDrawerState extends State<CustomDrawer>
                         CircleAvatar(
                           radius: height * 0.07,
                           backgroundColor: Colors.white,
-                          child: Image.asset("asset/person/maleStudent.png"),
+                          child:image != null
+                              ? Image.file(image!)
+                              : Image.asset("asset/person/maleStudent.png"),
+
                         ),
                         SizedBox(height: 20),
                         Text(
@@ -143,9 +151,9 @@ class _CustomDrawerState extends State<CustomDrawer>
                         .focusColor,
                     margin: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                     child: ListTile(
-                      leading: Icon(Icons.person, color: Colors.white),
+                      leading: Icon(Icons.person, color: Colors.white,),
                       title: Text(
-                          'Edit', style: TextStyle(color: Colors.white)),
+                          'Edit', style: TextStyle(color: Colors.white,fontFamily: "Jersey",fontSize: 20),),
                       onTap: () {
                         showDialog(
                           context: context,
@@ -212,7 +220,7 @@ class _CustomDrawerState extends State<CustomDrawer>
                                         thickness: 1,
                                         color: Colors.grey.withOpacity(0.5),
                                       ),
-                                    ],
+                                     ],
                                   ),
                                   actions: [
                                     InkWell(
@@ -302,8 +310,10 @@ class _CustomDrawerState extends State<CustomDrawer>
                     child: ListTile(
                       leading: Icon(Icons.info, color: Colors.white),
                       title: Text(
-                          'About App', style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                          'About App', style: TextStyle(color: Colors.white,fontFamily: "Jersey",fontSize: 20)),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => AboutApp(),),);
+                      },
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -317,8 +327,10 @@ class _CustomDrawerState extends State<CustomDrawer>
                     child: ListTile(
                       leading: Icon(Icons.grade, color: Colors.white),
                       title: Text(
-                          'Tips', style: TextStyle(color: Colors.white)),
-                      onTap: () {},
+                          'Tips', style: TextStyle(color: Colors.white,fontFamily: "Jersey",fontSize: 20)),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => TipsScreen(),),);
+                      },
                     ),
                   ),
                   Spacer(),
@@ -365,6 +377,18 @@ class _CustomDrawerState extends State<CustomDrawer>
                         ),
                   ),
                   Spacer(),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        children: [
+                          IconButton(onPressed: (){
+                             ProviderData myKey = context.read<ProviderData>();
+                             myKey.deleteProfileImageAndName(profile);
+                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => EnterScreen(),));
+                          }, icon: Icon(Icons.logout,color: Colors.red,size: 30,)),
+                          Text("Log Out",style: TextStyle(color: Colors.red,fontFamily: "Jersey",fontSize: 20),)
+                         ],
+                      ))
                 ],
 
               );

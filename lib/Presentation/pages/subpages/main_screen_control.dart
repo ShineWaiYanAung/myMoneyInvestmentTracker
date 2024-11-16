@@ -150,6 +150,7 @@ class _MainScreenControl extends State<MainScreenControl>
                       width: widget.width * 0.2,
                       height: widget.height * 0.1,
                       decoration: BoxDecoration(
+                        image: DecorationImage(image: AssetImage("asset/logo/lcslogo.png",),fit: BoxFit.fill),
                         color: Theme.of(context).focusColor,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
@@ -159,16 +160,6 @@ class _MainScreenControl extends State<MainScreenControl>
                             spreadRadius: 1,
                           ),
                         ],
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                         ///SearchEngine
-                        },
-                        icon: Icon(
-                          Icons.search,
-                          size: 50,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
                       ),
                     ),
                   ),

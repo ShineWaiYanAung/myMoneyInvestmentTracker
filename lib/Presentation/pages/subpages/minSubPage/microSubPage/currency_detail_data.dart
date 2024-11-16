@@ -69,39 +69,39 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: width * 0.9,
-              height: height * 0.07,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).focusColor,
-                  borderRadius: BorderRadius.circular(30)),
-              child: Row(
-                children: [
-                  IconButton(
-                    ///Needed To Implement
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.search,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                  Text(
-                    "Search....",
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.5),
-                        fontFamily: "Jersey",
-                        fontWeight: FontWeight.w100,
-                        fontSize: 30,
-                        letterSpacing: 2),
-                  ),
-                ],
-              ),
-            ),
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // Container(
+            //   width: width * 0.9,
+            //   height: height * 0.07,
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   decoration: BoxDecoration(
+            //       color: Theme.of(context).focusColor,
+            //       borderRadius: BorderRadius.circular(30)),
+            //   child: Row(
+            //     children: [
+            //       IconButton(
+            //         ///Needed To Implement
+            //         onPressed: () {},
+            //         icon: Icon(
+            //           Icons.search,
+            //           color: Colors.white,
+            //           size: 35,
+            //         ),
+            //       ),
+            //       Text(
+            //         "Search....",
+            //         style: TextStyle(
+            //             color: Colors.white.withOpacity(0.5),
+            //             fontFamily: "Jersey",
+            //             fontWeight: FontWeight.w100,
+            //             fontSize: 30,
+            //             letterSpacing: 2),
+            //       ),
+            //     ],
+            //   ),
+            // ),
             SizedBox(
               height: 50,
             ),
@@ -381,7 +381,7 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                           width: 1.0,
                         ),
                       ),
-                      hintText: 'Currency Rate',
+                      hintText: 'Currency Rate Bought',
                       hintStyle: TextStyle(color: Colors.white54),
                       errorText: currencyPriceRateError,
                     ),

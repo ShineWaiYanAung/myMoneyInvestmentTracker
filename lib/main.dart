@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/enter_screen.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,10 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is initialized
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   // Initialize Hive with Flutter support
   await Hive.initFlutter();

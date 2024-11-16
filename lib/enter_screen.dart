@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:money_investment_track/DataBase/HiveDataBase/Domain/LoginName/user_name.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
+import 'package:money_investment_track/Presentation/pages/main_screen.dart';
 import 'package:money_investment_track/main.dart';
 import 'package:provider/provider.dart';
 
@@ -32,7 +36,7 @@ class _EnterScreenState extends State<EnterScreen> {
               AnimatedTextKit(
                 animatedTexts: [
                   TypewriterAnimatedText(
-                    'Enter Your Name -_-',
+                    'Enter Your Name',
                     textStyle: const TextStyle(
                       fontFamily: 'Jersey',
                       color: Color(0xff5E6BB3),
@@ -86,18 +90,45 @@ class _EnterScreenState extends State<EnterScreen> {
                   cursorColor: Color(0xff5E6BB3), // Cursor color matching the theme
                 ),
               ),
+              SizedBox(height: 20,),
+              InkWell(
+                onTap: () async {
+                  // Pass setState to the picking method
+                  await _pickImageFromGallery(setState);
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: _selectedImage == null
+                        ? Theme.of(context).scaffoldBackgroundColor
+                        : Colors.green,
+                  ),
+                  child: Text(
+                    "Add Your Profile Image",
+                    style: TextStyle(
+                        color: _selectedImage == null
+                            ? Colors.white
+                            : Colors.white,
+                        fontSize: 16,
+                        fontFamily: "Jersey"),
+                  ),
+                ),
+              ),
               SizedBox(height: 40,),
               InkWell(
                 onTap: (){
                   ProviderData myKey = context.read<ProviderData>();
                   final name = nameController.text;
-                  UserName userName = UserName(name: name);
-                  if(name.isEmpty){
-                    myKey.showSnackBar(context, "Your Input is Wrong", false);
+                  final image  = _selectedImage;
+                  UserName userName = UserName(name: name,profileImage: image);
+                  if(name.isEmpty || image ==null){
+                    myKey.showSnackBar(context, "Your Input is Wrong or Your Forgot to put image", false);
                   }
                   else{
-                    myKey.showSnackBar(context, "WellCome $name", true);
+                    myKey.showSnackBar(context, "Welcome $name", true);
                     myKey.addOrUpdateNameData(userName);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainScreenPage(),));
                   }
 
                 },
@@ -117,5 +148,28 @@ class _EnterScreenState extends State<EnterScreen> {
         ),
       ),
     );
+  }
+  bool _isPickingImage = false; // Track image picking state
+  File? _selectedImage; // Ensure this is accessible in the dialog
+
+  Future<void> _pickImageFromGallery(StateSetter setState) async {
+    if (_isPickingImage) return; // Prevent multiple invocations
+
+    _isPickingImage = true; // Indicate picking is in progress
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+      await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() {
+          _selectedImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      print("Error picking image: $e");
+    } finally {
+      _isPickingImage = false; // Reset state after completion
+    }
   }
 }

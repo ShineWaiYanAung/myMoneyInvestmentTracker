@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_investment_track/DataBase/HiveDataBase/Domain/LoginName/boxes_username.dart';
@@ -10,7 +12,9 @@ class ProviderData extends ChangeNotifier {
   List<Crypto> cryptoInvestedData = [];
   bool isShow = true;
   String? _name;
+  File? _profile;
   String? get name => _name;
+  File? get profile => _profile;
 
 
   ///change the Nav
@@ -25,11 +29,12 @@ class ProviderData extends ChangeNotifier {
   final userNameBox = BoxesUsername.getUserNameData();
 
   Future<void> addOrUpdateNameData(UserName name) async {
-    print("addOrUpdateNameData called with name: ${name.name}");
+    print("addOrUpdateNameData called with name: ${name.profileImage}");
 
     if (userNameBox.isNotEmpty) {
       // If a username exists, update it instead of adding a new one
       final existingUserName = userNameBox.values.first;
+      final existingImage = existingUserName.profileImage;
       print("Existing username found: ${existingUserName.name}, deleting it...");
       await existingUserName.delete();
     }
@@ -37,12 +42,43 @@ class ProviderData extends ChangeNotifier {
     // Add the new username
     await userNameBox.add(name);
     _name = name.name;
+    _profile = name.profileImage;
     print("New username added: ${name.name}");
-
+    if(_profile ==null){
+      print("There is no image");
+    }
+    else
+      {
+        print("There is a Image");
+      }
     // Load the name data again after adding it
     await loadNameData(); // Ensure we load the newly added data
 
     notifyListeners();
+  }
+  void deleteProfileImageAndName(UserName profile) async {
+    if (userNameBox.isNotEmpty) {
+      // Check if there is a profile image
+      if (profile.profileImage != null) {
+        final file = profile.profileImage!;
+        if (await file.exists()) {
+          print("Deleting image at path: ${file.path}");
+          await file.delete();
+        } else {
+          print("Image file not found at path: ${file.path}");
+        }
+      } else {
+        print("No profile image found, only the username will be deleted.");
+      }
+
+      // Delete the user data from the Hive box
+      print("Deleting username: ${profile.name}");
+      await profile.delete();
+
+      print("Profile and associated image (if present) have been deleted.");
+    } else {
+      print("No profiles found to delete.");
+    }
   }
 
   Future<void> loadNameData() async {
@@ -50,6 +86,7 @@ class ProviderData extends ChangeNotifier {
 
     if (userNameBox.isNotEmpty) {
       _name = userNameBox.values.first.name;
+      _profile = userNameBox.values.first.profileImage;
       print("Loaded name: $_name");
     } else {
       print("No username found in Hive");
@@ -75,6 +112,7 @@ class ProviderData extends ChangeNotifier {
     box.add(cryptoData);
     notifyListeners();
   }
+
   void deletingData(Crypto cryptoData) {
     cryptoInvestedData.remove(cryptoData);
     cryptoData.delete();

@@ -18,15 +18,18 @@ class UserNameAdapter extends TypeAdapter<UserName> {
     };
     return UserName(
       name: fields[21] as String,
+      profileImage: fields[24] as File?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserName obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(21)
-      ..write(obj.name);
+      ..write(obj.name)
+      ..writeByte(24)
+      ..write(obj.profileImage);
   }
 
   @override
