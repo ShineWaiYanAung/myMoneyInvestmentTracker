@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:money_investment_track/DataBase/HiveDataBase/Domain/LoginName/user_name.dart';
 import 'package:money_investment_track/Presentation/bloc/Provider_Data.dart';
 import 'package:money_investment_track/Presentation/pages/main_screen.dart';
-import 'package:money_investment_track/main.dart';
+
 import 'package:provider/provider.dart';
 
 class EnterScreen extends StatefulWidget {

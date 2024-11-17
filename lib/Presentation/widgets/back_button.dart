@@ -17,7 +17,7 @@ class BackButtonWidget extends StatelessWidget {
       children: [
         GestureDetector(
             onTap: onNavigate,
-            child: Image.asset(isColorChange ? "asset/backButton/backButtonCurrency.png" : "asset/backButton/backButtonType.png")),
+            child: Image.asset(isColorChange ? "asset/backButton/backButtonCurrency.png" : "asset/backButton/backButtonType.png"),),
         Text(
           currencyName,
           style: TextStyle(

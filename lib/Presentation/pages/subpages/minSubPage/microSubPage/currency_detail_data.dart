@@ -485,7 +485,7 @@ class _CurrencyDetailDataState extends State<CurrencyDetailData> {
                       finalQuantity = double.parse(quantityStr);
                     }
                     double myanmarRate = double.parse(myanmarRateStr);
-                    double tonInDollar = (price + 0.02) * finalQuantity;
+                    double tonInDollar = (price + 0.002) * finalQuantity;
                     double totalPrice = (tonInDollar * myanmarRate);
 
                     // Create CurrencyInvestmentDataModel object

@@ -34,7 +34,7 @@ class _TipsScreenState extends State<TipsScreen> {
                 color: Theme.of(context).focusColor,
                 borderRadius: BorderRadius.circular(20),
               ),
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 mainAxisSize: MainAxisSize.min, // Adjust to fit content height
                 children: [
@@ -42,7 +42,7 @@ class _TipsScreenState extends State<TipsScreen> {
                     fit: FlexFit
                         .loose, // Allow child to shrink to its content size
                     child: Text(
-                      "I.C.T tracks investment money on Telegram",
+                      "I.C.T tracks investment money on Telegram app",
                       style: TextStyle(
                         color: Colors.white,
                         fontFamily: "Jersey",
@@ -174,43 +174,22 @@ class _TipsScreenState extends State<TipsScreen> {
               ),
             ),
             SizedBox(height: 40),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                buildCurrencyButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return buildDialog(context);
-                        },
-                      );
-                    },
-                    path: "asset/investingCurrencyPic/ton.png"),
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.white,
-                            blurRadius: 2,
-                          )
-                        ]),
-                    padding: EdgeInsets.all(40),
-                    child: Text(
-                      "K Pay",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
-            )
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+              padding: EdgeInsets.all(10),
+              height: 200,
+              width: 100,
+              child: buildCurrencyButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return buildDialog(context);
+                      },
+                    );
+                  },
+                  path: "asset/investingCurrencyPic/ton.png"),
+            ),
           ],
         ),
       ),
@@ -223,7 +202,7 @@ class _TipsScreenState extends State<TipsScreen> {
       onTap: onPressed,
       child: SizedBox(
         height: 160,
-        width: 150,
+        width: 100,
         child: Image.asset(
           path,
           fit: BoxFit.cover,
@@ -233,43 +212,53 @@ class _TipsScreenState extends State<TipsScreen> {
   }
 
   Widget buildDialog(BuildContext context) {
-    return Dialog(
+    return AlertDialog(
+      backgroundColor: Color(0xff171719),
+      title: Center(
+        child: Text(
+          "Ton Tipping",
+          style: TextStyle(
+              color: Colors.white,
+              fontFamily: "Jersey",
+              fontSize: 40),
+        ),
+      ),
+      
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Stack(
-        alignment: Alignment.topRight,
+      contentPadding: EdgeInsets.all(10),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(15),
-                ),
-                child: Image.network(
-                  "https://via.placeholder.com/300", // Replace with your image URL or asset
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: const Text(
-                  "This is a dialog with an image and a close button.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
+          Image.asset(
+            "asset/logo/tonQr.jpg", // Replace with your image URL or asset
+            height: 200,
+            fit: BoxFit.cover,
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.black),
+          Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: SelectableText(
+              "UQB5o3qpQPovBvFfeFrEm4EWTonzf9rnP_BPX52f_Ak5YcpM",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.white), // Set button color to white
+            ),
             onPressed: () {
               Navigator.of(context).pop();
             },
+            child: const Text(
+              "Close",
+              style: TextStyle(color: Colors.black), // Set text color to black for contrast
+            ),
           ),
+
         ],
       ),
     );

@@ -123,7 +123,15 @@ class _CustomDrawerState extends State<CustomDrawer>
                           radius: height * 0.07,
                           backgroundColor: Colors.white,
                           child:image != null
-                              ? Image.file(image!)
+                              ? Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: FileImage(image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
                               : Image.asset("asset/person/maleStudent.png"),
 
                         ),
